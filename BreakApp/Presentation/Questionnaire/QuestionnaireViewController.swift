@@ -13,6 +13,7 @@ final class QuestionnaireViewController: UIViewController {
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var stackView: UIStackView!
+    @IBOutlet weak var continueButton: UIButton!
     @IBOutlet weak var continueButtonBackView: UIView!
 
     private var viewModel = QuestionnaireViewModel()
@@ -27,6 +28,7 @@ final class QuestionnaireViewController: UIViewController {
     }
 
     private var smartphoneQuestionView: QuestionView!
+    private var googleMapsQuestionView: QuestionView!
     private var canGetPhoneQuestionView: QuestionView?
     private var collectionViewHeightConstraint: NSLayoutConstraint?
 
@@ -67,6 +69,13 @@ final class QuestionnaireViewController: UIViewController {
             self?.viewModel.setHasSmartphone(value)
         }
         stackView.addArrangedSubview(smartphoneQuestionView)
+
+        googleMapsQuestionView = loadQuestionView()
+        googleMapsQuestionView.configure(title: "Have you ever used Google Maps?")
+        googleMapsQuestionView.onSelectionChanged = { [weak self] value in
+            self?.viewModel.setHasUsedGoogleMaps(value)
+        }
+        stackView.addArrangedSubview(googleMapsQuestionView)
     }
 
     private func bindViewModel() {
@@ -99,8 +108,12 @@ final class QuestionnaireViewController: UIViewController {
     }
 
     private func updateContinueState() {
-        continueButtonBackView.backgroundColor = viewModel.isContinueEnabled ? UIColor.purple : UIColor.systemGray6
-        continueButtonBackView.isUserInteractionEnabled = viewModel.isContinueEnabled
+        let enabled = viewModel.isContinueEnabled
+        continueButtonBackView.backgroundColor = enabled ? .purple : .systemGray6
+        continueButtonBackView.isUserInteractionEnabled = enabled
+        if let button = continueButtonBackView.subviews.first(where: { $0 is UIButton }) as? UIButton {
+            button.tintColor = enabled ? .white : .systemGray2
+        }
     }
 
     @IBAction func continueTapped(_ sender: Any) {

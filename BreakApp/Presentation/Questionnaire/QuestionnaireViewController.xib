@@ -11,6 +11,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="QuestionnaireViewController" customModule="BreakApp" customModuleProvider="target">
             <connections>
                 <outlet property="collectionView" destination="Ypt-05-xgy" id="ixp-N4-eOr"/>
+                <outlet property="continueButton" destination="Nt9-HA-aF1" id="4pG-24-JoS"/>
                 <outlet property="continueButtonBackView" destination="gYv-vJ-1cU" id="3rD-V2-dVL"/>
                 <outlet property="stackView" destination="60V-de-AJS" id="mRf-8m-K9c"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>

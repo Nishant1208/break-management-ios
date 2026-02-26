@@ -21,6 +21,7 @@ final class QuestionnaireViewModel {
 
     var selectedTasks: Set<Task> = []
     var hasSmartphone: Bool?
+    var hasUsedGoogleMaps: Bool?
     var canGetPhone: Bool?
 
     var onStateChanged: (() -> Void)?
@@ -55,6 +56,11 @@ final class QuestionnaireViewModel {
         onStateChanged?()
     }
 
+    func setHasUsedGoogleMaps(_ value: Bool) {
+        hasUsedGoogleMaps = value
+        onStateChanged?()
+    }
+
     func setCanGetPhone(_ value: Bool) {
         canGetPhone = value
         onStateChanged?()
@@ -68,7 +74,8 @@ final class QuestionnaireViewModel {
 
     var isContinueEnabled: Bool {
         guard !selectedTasks.isEmpty,
-              let hasSmartphone = hasSmartphone else { return false }
+              let hasSmartphone = hasSmartphone,
+              hasUsedGoogleMaps != nil else { return false }
 
         if hasSmartphone == false {
             return canGetPhone != nil
