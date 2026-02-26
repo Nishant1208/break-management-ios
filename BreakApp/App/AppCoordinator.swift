@@ -39,12 +39,12 @@ final class AppCoordinator {
 
     private func determineInitialFlow() {
         
-        showLogin()
-//        if authRepository.currentUserId() == nil {
-//            showLogin()
-//        } else {
-//            showQuestionnaire()
-//        }
+//        showLogin()
+        if authRepository.currentUserId() == nil {
+            showLogin()
+        } else {
+            showQuestionnaire()
+        }
     }
 
     // MARK: - Navigation
@@ -64,16 +64,23 @@ final class AppCoordinator {
     private func showQuestionnaire() {
         let viewModel = QuestionnaireViewModel()
 
+        let viewController = QuestionnaireViewController(viewModel: viewModel)
+
         viewModel.onBack = { [weak self] in
             self?.showLogin()
         }
 
         viewModel.onSubmitSuccess = { [weak self] in
-            // Navigate to next screen after questionnaire
-            _ = self
+            self?.showBreakScreen()
         }
 
-        let viewController = QuestionnaireViewController()
         navigationController.setViewControllers([viewController], animated: true)
+    }
+    
+    private func showBreakScreen() {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .systemBlue
+        vc.title = "Break Active"
+        navigationController.setViewControllers([vc], animated: true)
     }
 }

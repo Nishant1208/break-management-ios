@@ -11,11 +11,10 @@ class TasksCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet weak var radioImage: UIImageView!
     @IBOutlet weak var taskLabel: UILabel!
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
+
+    var onTap: (() -> Void)?
 
     @IBAction func clickedOnTask(_ sender: Any) {
+        onTap?()
     }
 }

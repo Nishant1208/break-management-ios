@@ -7,116 +7,72 @@
 
 import Foundation
 
-// MARK: - Models
-
-struct SkillOption {
-    let title: String
-    var isSelected: Bool
-}
-
-// MARK: - ViewModel
-
 final class QuestionnaireViewModel {
 
-    // MARK: - State
-
-    private(set) var skillOptions: [SkillOption] = [
-        SkillOption(title: "Cutting vegetables", isSelected: false),
-        SkillOption(title: "Sweeping", isSelected: false),
-        SkillOption(title: "Mopping", isSelected: false),
-        SkillOption(title: "Cleaning bathrooms", isSelected: false),
-        SkillOption(title: "Laundry", isSelected: false),
-        SkillOption(title: "Washing dishes", isSelected: false),
-        SkillOption(title: "None of the above", isSelected: false)
-    ]
-
-    private(set) var hasSmartphone: Bool?
-    private(set) var willGetPhone: Bool?
-    private(set) var hasUsedGoogleMaps: Bool?
-    private(set) var dateOfBirth: (day: String, month: String, year: String) = ("", "", "")
-
-    // MARK: - Derived State
-
-    var shouldShowWillGetPhoneQuestion: Bool {
-        hasSmartphone == false
+    enum Task: String, CaseIterable {
+        case cuttingVegetables = "Cutting vegetables"
+        case sweeping = "Sweeping"
+        case mopping = "Mopping"
+        case cleaningBathrooms = "Cleaning bathrooms"
+        case laundry = "Laundry"
+        case washingDishes = "Washing dishes"
+        case none = "None of the above"
     }
 
-    var isFormValid: Bool {
-        let hasSkillSelection = skillOptions.contains(where: \.isSelected)
-        let hasSmartphoneAnswer = hasSmartphone != nil
-        let hasPhoneAnswer = !shouldShowWillGetPhoneQuestion || willGetPhone != nil
-        let hasGoogleMapsAnswer = hasUsedGoogleMaps != nil
-        let hasValidDate = !dateOfBirth.day.isEmpty
-            && !dateOfBirth.month.isEmpty
-            && !dateOfBirth.year.isEmpty
+    var selectedTasks: Set<Task> = []
+    var hasSmartphone: Bool?
+    var canGetPhone: Bool?
 
-        return hasSkillSelection
-            && hasSmartphoneAnswer
-            && hasPhoneAnswer
-            && hasGoogleMapsAnswer
-            && hasValidDate
-    }
+    var onStateChanged: (() -> Void)?
 
-    // MARK: - Callbacks
-
-    var onFormStateChanged: (() -> Void)?
-    var onSubmitSuccess: (() -> Void)?
-    var onError: ((String) -> Void)?
     var onBack: (() -> Void)?
+    var onSubmitSuccess: (() -> Void)?
 
-    // MARK: - Skill Actions
 
-    func toggleSkill(at index: Int) {
-        let isNoneOption = index == skillOptions.count - 1
+    // MARK: - Task Handling
 
-        if isNoneOption {
-            let wasSelected = skillOptions[index].isSelected
-            for i in skillOptions.indices {
-                skillOptions[i].isSelected = false
-            }
-            skillOptions[index].isSelected = !wasSelected
+    func toggleTask(_ task: Task) {
+        if task == .none {
+            selectedTasks = [.none]
         } else {
-            skillOptions[index].isSelected.toggle()
-            skillOptions[skillOptions.count - 1].isSelected = false
+            selectedTasks.remove(.none)
+            if selectedTasks.contains(task) {
+                selectedTasks.remove(task)
+            } else {
+                selectedTasks.insert(task)
+            }
         }
-
-        onFormStateChanged?()
+        onStateChanged?()
     }
 
-    // MARK: - Radio Actions
+    // MARK: - Smartphone Handling
 
     func setHasSmartphone(_ value: Bool) {
         hasSmartphone = value
-        if value {
-            willGetPhone = nil
+        if value == true {
+            canGetPhone = nil
         }
-        onFormStateChanged?()
+        onStateChanged?()
     }
 
-    func setWillGetPhone(_ value: Bool) {
-        willGetPhone = value
-        onFormStateChanged?()
+    func setCanGetPhone(_ value: Bool) {
+        canGetPhone = value
+        onStateChanged?()
     }
 
-    func setHasUsedGoogleMaps(_ value: Bool) {
-        hasUsedGoogleMaps = value
-        onFormStateChanged?()
+    // MARK: - Validation
+
+    var shouldShowCanGetPhone: Bool {
+        return hasSmartphone == false
     }
 
-    // MARK: - Date Actions
+    var isContinueEnabled: Bool {
+        guard !selectedTasks.isEmpty,
+              let hasSmartphone = hasSmartphone else { return false }
 
-    func setDateOfBirth(day: String, month: String, year: String) {
-        dateOfBirth = (day, month, year)
-        onFormStateChanged?()
-    }
-
-    // MARK: - Submit
-
-    func submit() {
-        guard isFormValid else {
-            onError?("Please complete all questions.")
-            return
+        if hasSmartphone == false {
+            return canGetPhone != nil
         }
-        onSubmitSuccess?()
+        return true
     }
 }
