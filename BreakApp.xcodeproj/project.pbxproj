@@ -9,6 +9,14 @@
 /* Begin PBXBuildFile section */
 		5A40567E2F5040AE00C44EDF /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 5A40567D2F5040AE00C44EDF /* FirebaseAuth */; };
 		5A4056802F5040AE00C44EDF /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 5A40567F2F5040AE00C44EDF /* FirebaseFirestore */; };
+		5AA083362F504D6200C77523 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5AA0832D2F504D6200C77523 /* Assets.xcassets */; };
+		5AA083372F504D6200C77523 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5AA0832E2F504D6200C77523 /* GoogleService-Info.plist */; };
+		5AA083392F504D6200C77523 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5AA083312F504D6200C77523 /* LaunchScreen.storyboard */; };
+		5AA0833A2F504D6200C77523 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5AA083332F504D6200C77523 /* Main.storyboard */; };
+		5AA0833B2F504D6200C77523 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AA083292F504D6200C77523 /* AppCoordinator.swift */; };
+		5AA0833C2F504D6200C77523 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AA0832A2F504D6200C77523 /* AppDelegate.swift */; };
+		5AA0833D2F504D6200C77523 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AA0832B2F504D6200C77523 /* SceneDelegate.swift */; };
+		5AA0833E2F504D6200C77523 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AA083342F504D6200C77523 /* ViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,27 +40,18 @@
 		5A4056482F503B4A00C44EDF /* BreakApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BreakApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A40565E2F503B4C00C44EDF /* BreakAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BreakAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A4056682F503B4C00C44EDF /* BreakAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BreakAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5AA083292F504D6200C77523 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		5AA0832A2F504D6200C77523 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		5AA0832B2F504D6200C77523 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		5AA0832D2F504D6200C77523 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5AA0832E2F504D6200C77523 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		5AA0832F2F504D6200C77523 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5AA083302F504D6200C77523 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		5AA083322F504D6200C77523 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		5AA083342F504D6200C77523 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		5A4056702F503B4C00C44EDF /* Exceptions for "BreakApp" folder in "BreakApp" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 5A4056472F503B4A00C44EDF /* BreakApp */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		5A40564A2F503B4A00C44EDF /* BreakApp */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				5A4056702F503B4C00C44EDF /* Exceptions for "BreakApp" folder in "BreakApp" target */,
-			);
-			path = BreakApp;
-			sourceTree = "<group>";
-		};
 		5A4056612F503B4C00C44EDF /* BreakAppTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = BreakAppTests;
@@ -61,6 +60,26 @@
 		5A40566B2F503B4C00C44EDF /* BreakAppUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = BreakAppUITests;
+			sourceTree = "<group>";
+		};
+		5AA083432F504E0600C77523 /* Models */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Models;
+			sourceTree = "<group>";
+		};
+		5AA083442F504E0C00C77523 /* Protocols */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		5AA083482F504E3000C77523 /* Repositories */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		5AA0834C2F504FED00C77523 /* Login */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Login;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -95,7 +114,7 @@
 		5A40563F2F503B4A00C44EDF = {
 			isa = PBXGroup;
 			children = (
-				5A40564A2F503B4A00C44EDF /* BreakApp */,
+				5AA083352F504D6200C77523 /* BreakApp */,
 				5A4056612F503B4C00C44EDF /* BreakAppTests */,
 				5A40566B2F503B4C00C44EDF /* BreakAppUITests */,
 				5A4056492F503B4A00C44EDF /* Products */,
@@ -110,6 +129,66 @@
 				5A4056682F503B4C00C44EDF /* BreakAppUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		5AA0832C2F504D6200C77523 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				5AA083292F504D6200C77523 /* AppCoordinator.swift */,
+				5AA0832A2F504D6200C77523 /* AppDelegate.swift */,
+				5AA0832B2F504D6200C77523 /* SceneDelegate.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		5AA083352F504D6200C77523 /* BreakApp */ = {
+			isa = PBXGroup;
+			children = (
+				5AA083422F504D8F00C77523 /* Presentation */,
+				5AA083412F504D8A00C77523 /* Data */,
+				5AA083402F504D8400C77523 /* Domain */,
+				5AA0833F2F504D7E00C77523 /* Core */,
+				5AA0832C2F504D6200C77523 /* App */,
+				5AA0832D2F504D6200C77523 /* Assets.xcassets */,
+				5AA0832E2F504D6200C77523 /* GoogleService-Info.plist */,
+				5AA0832F2F504D6200C77523 /* Info.plist */,
+				5AA083312F504D6200C77523 /* LaunchScreen.storyboard */,
+				5AA083332F504D6200C77523 /* Main.storyboard */,
+				5AA083342F504D6200C77523 /* ViewController.swift */,
+			);
+			path = BreakApp;
+			sourceTree = "<group>";
+		};
+		5AA0833F2F504D7E00C77523 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		5AA083402F504D8400C77523 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				5AA083442F504E0C00C77523 /* Protocols */,
+				5AA083432F504E0600C77523 /* Models */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		5AA083412F504D8A00C77523 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				5AA083482F504E3000C77523 /* Repositories */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		5AA083422F504D8F00C77523 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				5AA0834C2F504FED00C77523 /* Login */,
+			);
+			path = Presentation;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -128,7 +207,10 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				5A40564A2F503B4A00C44EDF /* BreakApp */,
+				5AA083432F504E0600C77523 /* Models */,
+				5AA083442F504E0C00C77523 /* Protocols */,
+				5AA083482F504E3000C77523 /* Repositories */,
+				5AA0834C2F504FED00C77523 /* Login */,
 			);
 			name = BreakApp;
 			packageProductDependencies = (
@@ -237,6 +319,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5AA083362F504D6200C77523 /* Assets.xcassets in Resources */,
+				5AA083372F504D6200C77523 /* GoogleService-Info.plist in Resources */,
+				5AA083392F504D6200C77523 /* LaunchScreen.storyboard in Resources */,
+				5AA0833A2F504D6200C77523 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,6 +347,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5AA0833B2F504D6200C77523 /* AppCoordinator.swift in Sources */,
+				5AA0833C2F504D6200C77523 /* AppDelegate.swift in Sources */,
+				5AA0833D2F504D6200C77523 /* SceneDelegate.swift in Sources */,
+				5AA0833E2F504D6200C77523 /* ViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -292,6 +382,25 @@
 			targetProxy = 5A4056692F503B4C00C44EDF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		5AA083312F504D6200C77523 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5AA083302F504D6200C77523 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		5AA083332F504D6200C77523 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5AA083322F504D6200C77523 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		5A4056722F503B4C00C44EDF /* Debug */ = {
