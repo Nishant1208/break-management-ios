@@ -62,10 +62,18 @@ final class AppCoordinator {
     }
 
     private func showQuestionnaire() {
-        // Temporary placeholder until we implement questionnaire screen
-        let vc = UIViewController()
-        vc.view.backgroundColor = .systemGreen
-        vc.title = "Questionnaire"
-        navigationController.setViewControllers([vc], animated: true)
+        let viewModel = QuestionnaireViewModel()
+
+        viewModel.onBack = { [weak self] in
+            self?.showLogin()
+        }
+
+        viewModel.onSubmitSuccess = { [weak self] in
+            // Navigate to next screen after questionnaire
+            _ = self
+        }
+
+        let viewController = QuestionnaireViewController()
+        navigationController.setViewControllers([viewController], animated: true)
     }
 }
