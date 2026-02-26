@@ -38,23 +38,21 @@ final class AppCoordinator {
     // MARK: - Flow Logic
 
     private func determineInitialFlow() {
-        if authRepository.currentUserId() == nil {
-            showLogin()
-        } else {
-            showQuestionnaire()
-        }
+        
+        showLogin()
+//        if authRepository.currentUserId() == nil {
+//            showLogin()
+//        } else {
+//            showQuestionnaire()
+//        }
     }
 
     // MARK: - Navigation
 
     private func showLogin() {
-        let viewModel = LoginViewModel(
-            authRepository: authRepository
-        )
+        let viewModel = LoginViewModel(authRepository: authRepository)
 
-        let viewController = LoginViewController(
-            viewModel: viewModel
-        )
+        let viewController = LoginViewController(viewModel: viewModel)
 
         viewModel.onLoginSuccess = { [weak self] in
             self?.showQuestionnaire()

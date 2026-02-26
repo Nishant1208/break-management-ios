@@ -10,6 +10,11 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LoginViewController" customModule="BreakApp" customModuleProvider="target">
             <connections>
+                <outlet property="emailTextField" destination="Nvj-u1-pY8" id="zYh-pn-tCX"/>
+                <outlet property="errorLabel" destination="43t-jU-Kf7" id="7MZ-Wa-TAR"/>
+                <outlet property="loginButton" destination="Zyc-Hz-G5F" id="nrO-Z3-oco"/>
+                <outlet property="loginButtonBackView" destination="Jh8-L5-zDZ" id="rx7-Hx-F4x"/>
+                <outlet property="passwordTextField" destination="w01-4z-kqu" id="9zX-b4-xAJ"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -77,6 +82,9 @@
                                     </fragment>
                                 </attributedString>
                             </buttonConfiguration>
+                            <connections>
+                                <action selector="loginTapped:" destination="-1" eventType="touchUpInside" id="uaD-P4-jxJ"/>
+                            </connections>
                         </button>
                     </subviews>
                     <color key="backgroundColor" systemColor="systemGray6Color"/>

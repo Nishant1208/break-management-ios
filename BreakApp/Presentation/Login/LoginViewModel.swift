@@ -42,7 +42,10 @@ final class LoginViewModel {
     // MARK: - Private
 
     private func performLogin(email: String, password: String) async {
-        onLoadingStateChange?(true)
+
+        await MainActor.run {
+            self.onLoadingStateChange?(true)
+        }
 
         do {
             try await authRepository.login(email: email, password: password)
