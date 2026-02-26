@@ -24,10 +24,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         // Dependency Injection
         let authRepository = FirebaseAuthRepository()
+        let dataRepository = FirestoreDataRepository()
 
         let coordinator = AppCoordinator(
             window: window,
-            authRepository: authRepository
+            authRepository: authRepository,
+            dataRepository: dataRepository
         )
 
         self.coordinator = coordinator

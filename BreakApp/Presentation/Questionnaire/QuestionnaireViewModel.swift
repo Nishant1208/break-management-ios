@@ -9,7 +9,7 @@ import Foundation
 
 final class QuestionnaireViewModel {
 
-    enum Task: String, CaseIterable {
+    enum SkillTask: String, CaseIterable {
         case cuttingVegetables = "Cutting vegetables"
         case sweeping = "Sweeping"
         case mopping = "Mopping"
@@ -19,20 +19,29 @@ final class QuestionnaireViewModel {
         case none = "None of the above"
     }
 
-    var selectedTasks: Set<Task> = []
+    private let dataRepository: DataRepositoryProtocol
+    private let userId: String
+
+    var selectedTasks: Set<SkillTask> = []
     var hasSmartphone: Bool?
     var hasUsedGoogleMaps: Bool?
     var canGetPhone: Bool?
+    var isSubmitting = false
 
     var onStateChanged: (() -> Void)?
-
+    var onError: ((String) -> Void)?
     var onBack: (() -> Void)?
     var onSubmitSuccess: (() -> Void)?
+
+    init(dataRepository: DataRepositoryProtocol, userId: String) {
+        self.dataRepository = dataRepository
+        self.userId = userId
+    }
 
 
     // MARK: - Task Handling
 
-    func toggleTask(_ task: Task) {
+    func toggleTask(_ task: SkillTask) {
         if task == .none {
             selectedTasks = [.none]
         } else {
@@ -73,7 +82,7 @@ final class QuestionnaireViewModel {
     }
 
     var isContinueEnabled: Bool {
-        guard !selectedTasks.isEmpty,
+        guard !selectedTasks.isEmpty, !isSubmitting,
               let hasSmartphone = hasSmartphone,
               hasUsedGoogleMaps != nil else { return false }
 
@@ -81,5 +90,38 @@ final class QuestionnaireViewModel {
             return canGetPhone != nil
         }
         return true
+    }
+
+    // MARK: - Submit
+
+    func submit() {
+        guard isContinueEnabled else { return }
+        isSubmitting = true
+        onStateChanged?()
+
+        let response = QuestionnaireResponse(
+            userId: userId,
+            selectedTasks: selectedTasks.map(\.rawValue),
+            hasSmartphone: hasSmartphone ?? false,
+            hasUsedGoogleMaps: hasUsedGoogleMaps ?? false,
+            canGetPhone: canGetPhone,
+            submittedAt: Date()
+        )
+
+        Task {
+            do {
+                try await dataRepository.submitQuestionnaire(response)
+                await MainActor.run {
+                    isSubmitting = false
+                    onSubmitSuccess?()
+                }
+            } catch {
+                await MainActor.run {
+                    isSubmitting = false
+                    onStateChanged?()
+                    onError?(error.localizedDescription)
+                }
+            }
+        }
     }
 }

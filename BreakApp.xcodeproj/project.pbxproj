@@ -87,6 +87,16 @@
 			path = Questionnaire;
 			sourceTree = "<group>";
 		};
+		5AA0837D2F50CC8400C77523 /* New Folder */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "New Folder";
+			sourceTree = "<group>";
+		};
+		5AA083902F50DD0000C77523 /* Break */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Break;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,6 +201,8 @@
 		5AA083422F504D8F00C77523 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				5AA083902F50DD0000C77523 /* Break */,
+				5AA0837D2F50CC8400C77523 /* New Folder */,
 				5AA083582F5093FE00C77523 /* Questionnaire */,
 				5AA0834C2F504FED00C77523 /* Login */,
 			);
@@ -218,6 +230,8 @@
 				5AA083482F504E3000C77523 /* Repositories */,
 				5AA0834C2F504FED00C77523 /* Login */,
 				5AA083582F5093FE00C77523 /* Questionnaire */,
+				5AA0837D2F50CC8400C77523 /* New Folder */,
+				5AA083902F50DD0000C77523 /* Break */,
 			);
 			name = BreakApp;
 			packageProductDependencies = (

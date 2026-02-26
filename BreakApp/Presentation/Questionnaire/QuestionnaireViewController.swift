@@ -16,7 +16,7 @@ final class QuestionnaireViewController: UIViewController {
     @IBOutlet weak var continueButton: UIButton!
     @IBOutlet weak var continueButtonBackView: UIView!
 
-    private var viewModel = QuestionnaireViewModel()
+    private var viewModel: QuestionnaireViewModel
     
     init(viewModel: QuestionnaireViewModel) {
         self.viewModel = viewModel
@@ -84,6 +84,11 @@ final class QuestionnaireViewController: UIViewController {
             self?.updateContinueState()
             self?.collectionView.reloadData()
         }
+        viewModel.onError = { [weak self] message in
+            let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            self?.present(alert, animated: true)
+        }
     }
 
     private func handleDynamicQuestions() {
@@ -117,7 +122,7 @@ final class QuestionnaireViewController: UIViewController {
     }
 
     @IBAction func continueTapped(_ sender: Any) {
-        viewModel.onSubmitSuccess?()
+        viewModel.submit()
     }
     
     private func loadQuestionView() -> QuestionView {
@@ -144,13 +149,13 @@ extension QuestionnaireViewController: UICollectionViewDelegate, UICollectionVie
 
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return QuestionnaireViewModel.Task.allCases.count
+        return QuestionnaireViewModel.SkillTask.allCases.count
     }
 
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
-        let task = QuestionnaireViewModel.Task.allCases[indexPath.row]
+        let task = QuestionnaireViewModel.SkillTask.allCases[indexPath.row]
 
         let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: "TasksCollectionViewCell",

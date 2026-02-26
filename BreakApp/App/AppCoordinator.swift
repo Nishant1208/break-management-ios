@@ -15,21 +15,25 @@ final class AppCoordinator {
     private let window: UIWindow
     private let navigationController: UINavigationController
     private let authRepository: AuthRepositoryProtocol
+    private let dataRepository: DataRepositoryProtocol
 
     // MARK: - Init
 
     init(
         window: UIWindow,
-        authRepository: AuthRepositoryProtocol
+        authRepository: AuthRepositoryProtocol,
+        dataRepository: DataRepositoryProtocol
     ) {
         self.window = window
         self.authRepository = authRepository
+        self.dataRepository = dataRepository
         self.navigationController = UINavigationController()
     }
 
     // MARK: - Start
 
     func start() {
+        navigationController.setNavigationBarHidden(true, animated: false)
         window.rootViewController = navigationController
         window.makeKeyAndVisible()
         determineInitialFlow()
@@ -38,8 +42,6 @@ final class AppCoordinator {
     // MARK: - Flow Logic
 
     private func determineInitialFlow() {
-        
-//        showLogin()
         if authRepository.currentUserId() == nil {
             showLogin()
         } else {
@@ -62,7 +64,15 @@ final class AppCoordinator {
     }
 
     private func showQuestionnaire() {
-        let viewModel = QuestionnaireViewModel()
+        guard let userId = authRepository.currentUserId() else {
+            showLogin()
+            return
+        }
+
+        let viewModel = QuestionnaireViewModel(
+            dataRepository: dataRepository,
+            userId: userId
+        )
 
         let viewController = QuestionnaireViewController(viewModel: viewModel)
 
@@ -76,11 +86,20 @@ final class AppCoordinator {
 
         navigationController.setViewControllers([viewController], animated: true)
     }
-    
+
     private func showBreakScreen() {
-        let vc = UIViewController()
-        vc.view.backgroundColor = .systemBlue
-        vc.title = "Break Active"
-        navigationController.setViewControllers([vc], animated: true)
+        guard let userId = authRepository.currentUserId() else {
+            showLogin()
+            return
+        }
+
+        let viewModel = BreakViewModel(
+            dataRepository: dataRepository,
+            userId: userId
+        )
+
+        let viewController = BreakViewController(viewModel: viewModel)
+
+        navigationController.setViewControllers([viewController], animated: true)
     }
 }
