@@ -55,7 +55,7 @@ GoogleService-Info.plist is in this repo so you can build and run straight away 
 
 1. Clone the repo:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/BreakApp.git
+   git clone https://github.com/Nishant1208/break-management-ios.git
    cd BreakApp
    ```
 
