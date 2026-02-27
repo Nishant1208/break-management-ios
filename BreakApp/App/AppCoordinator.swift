@@ -1,10 +1,3 @@
-//
-//  AppCoordinator.swift
-//  BreakApp
-//
-//  Created by Nishant Gulani on 26/02/26.
-//
-
 import UIKit
 import FirebaseAuth
 
@@ -42,18 +35,47 @@ final class AppCoordinator {
     // MARK: - Flow Logic
 
     private func determineInitialFlow() {
-        if authRepository.currentUserId() == nil {
+        guard let userId = authRepository.currentUserId() else {
             showLogin()
-        } else {
-            showQuestionnaire()
+            return
+        }
+
+        showLoadingScreen()
+
+        Task {
+            do {
+                let hasSubmitted = try await dataRepository.hasSubmittedQuestionnaire(userId: userId)
+                await MainActor.run {
+                    if hasSubmitted {
+                        showBreakScreen()
+                    } else {
+                        showQuestionnaire()
+                    }
+                }
+            } catch {
+                await MainActor.run {
+                    showQuestionnaire()
+                }
+            }
         }
     }
 
     // MARK: - Navigation
 
+    private func showLoadingScreen() {
+        let vc = UIViewController()
+        vc.view.backgroundColor = UIColor(red: 0.10, green: 0.10, blue: 0.25, alpha: 1)
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.color = .white
+        indicator.startAnimating()
+        indicator.center = vc.view.center
+        indicator.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin, .flexibleTopMargin, .flexibleBottomMargin]
+        vc.view.addSubview(indicator)
+        navigationController.setViewControllers([vc], animated: false)
+    }
+
     private func showLogin() {
         let viewModel = LoginViewModel(authRepository: authRepository)
-
         let viewController = LoginViewController(viewModel: viewModel)
 
         viewModel.onLoginSuccess = { [weak self] in
