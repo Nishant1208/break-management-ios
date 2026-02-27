@@ -1,3 +1,10 @@
+//
+//  BreakSession.swift
+//  BreakApp
+//
+//  Created by Nishant Gulani on 26/02/26.
+//
+
 import Foundation
 
 struct BreakSession: Codable {

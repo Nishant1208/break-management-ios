@@ -1,3 +1,10 @@
+//
+//  AppCoordinator.swift
+//  BreakApp
+//
+//  Created by Nishant Gulani on 26/02/26.
+//
+
 import UIKit
 import FirebaseAuth
 
@@ -119,6 +126,11 @@ final class AppCoordinator {
             dataRepository: dataRepository,
             userId: userId
         )
+
+        viewModel.onLogout = { [weak self] in
+            try? self?.authRepository.logout()
+            self?.showLogin()
+        }
 
         let viewController = BreakViewController(viewModel: viewModel)
 

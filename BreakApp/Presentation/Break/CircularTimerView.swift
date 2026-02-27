@@ -1,3 +1,10 @@
+//
+//  CircularTimerView.swift
+//  BreakApp
+//
+//  Created by Nishant Gulani on 26/02/26.
+//
+
 import UIKit
 
 final class CircularTimerView: UIView {

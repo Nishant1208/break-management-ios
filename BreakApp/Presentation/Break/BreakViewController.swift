@@ -1,10 +1,26 @@
+//
+//  BreakViewController.swift
+//  BreakApp
+//
+//  Created by Nishant Gulani on 26/02/26.
+//
+
 import UIKit
 
 final class BreakViewController: UIViewController {
 
     private let viewModel: BreakViewModel
 
-    // MARK: - Common Header
+    // MARK: - Background
+
+    private let backgroundImageView: UIImageView = {
+        let iv = UIImageView(image: UIImage(named: "break_bg"))
+        iv.contentMode = .scaleAspectFill
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        return iv
+    }()
+
+    // MARK: - Header
 
     private let greetingLabel: UILabel = {
         let label = UILabel()
@@ -24,13 +40,25 @@ final class BreakViewController: UIViewController {
         return label
     }()
 
-    // MARK: - Active State
+    // MARK: - Scroll view for content
 
-    private let activeContainerView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
+    private let scrollView: UIScrollView = {
+        let sv = UIScrollView()
+        sv.showsVerticalScrollIndicator = false
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        return sv
     }()
+
+    private let contentStackView: UIStackView = {
+        let sv = UIStackView()
+        sv.axis = .vertical
+        sv.spacing = 20
+        sv.alignment = .fill
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        return sv
+    }()
+
+    // MARK: - Active: Timer Card
 
     private let activeCard: GradientCardView = {
         let view = GradientCardView()
@@ -41,8 +69,8 @@ final class BreakViewController: UIViewController {
     private let cardSubtitleLabel: UILabel = {
         let label = UILabel()
         label.text = "We value your hard work!\nTake this time to relax"
-        label.font = .systemFont(ofSize: 14, weight: .medium)
-        label.textColor = UIColor.white.withAlphaComponent(0.85)
+        label.font = .systemFont(ofSize: 15, weight: .medium)
+        label.textColor = UIColor.white.withAlphaComponent(0.9)
         label.textAlignment = .center
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -54,6 +82,8 @@ final class BreakViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+
+    // MARK: - Active: Below Card
 
     private let breakEndsLabel: UILabel = {
         let label = UILabel()
@@ -69,46 +99,37 @@ final class BreakViewController: UIViewController {
         button.setTitle("End my break", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .bold)
-        button.backgroundColor = UIColor(red: 0.85, green: 0.22, blue: 0.22, alpha: 1)
+        button.backgroundColor = UIColor(red: 0.80, green: 0.25, blue: 0.25, alpha: 1)
         button.layer.cornerRadius = 14
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
 
-    // MARK: - Ended State
+    // MARK: - Ended: Card
 
-    private let endedContainerView: UIView = {
-        let view = UIView()
-        view.isHidden = true
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-
-    private let endedCard: GradientCardView = {
-        let view = GradientCardView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-
-    private let checkmarkView: UIImageView = {
-        let config = UIImage.SymbolConfiguration(pointSize: 70, weight: .medium)
-        let image = UIImage(systemName: "checkmark.circle.fill", withConfiguration: config)
-        let iv = UIImageView(image: image)
-        iv.tintColor = UIColor(red: 0.2, green: 0.75, blue: 0.45, alpha: 1)
+    private let endedCardImageView: UIImageView = {
+        let iv = UIImageView(image: UIImage(named: "break_ended_card"))
         iv.contentMode = .scaleAspectFit
         iv.translatesAutoresizingMaskIntoConstraints = false
+        iv.layer.cornerRadius = 20
+        iv.clipsToBounds = true
         return iv
     }()
 
-    private let endedMessageLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Hope you are feeling refreshed and\nready to start working again"
-        label.font = .systemFont(ofSize: 14, weight: .medium)
-        label.textColor = UIColor.white.withAlphaComponent(0.85)
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+    // MARK: - Progress Stepper
+
+    private let stepperContainer: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.cornerRadius = 16
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
+    private let stepperView: ProgressStepperView = {
+        let view = ProgressStepperView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
 
     // MARK: - Loading
@@ -120,6 +141,11 @@ final class BreakViewController: UIViewController {
         indicator.hidesWhenStopped = true
         return indicator
     }()
+
+    // MARK: - Wrapper Views
+
+    private let activeViews = UIView()
+    private let endedViews = UIView()
 
     // MARK: - Init
 
@@ -149,91 +175,115 @@ final class BreakViewController: UIViewController {
         view.backgroundColor = UIColor(red: 0.10, green: 0.10, blue: 0.25, alpha: 1)
         navigationController?.setNavigationBarHidden(true, animated: false)
 
+        view.addSubview(backgroundImageView)
         view.addSubview(greetingLabel)
         view.addSubview(headerLabel)
-        view.addSubview(activeContainerView)
-        view.addSubview(endedContainerView)
+        view.addSubview(scrollView)
         view.addSubview(activityIndicator)
 
-        setupActiveState()
-        setupEndedState()
+        scrollView.addSubview(contentStackView)
 
         NSLayoutConstraint.activate([
+            backgroundImageView.topAnchor.constraint(equalTo: view.topAnchor),
+            backgroundImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            backgroundImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            backgroundImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
             greetingLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
             greetingLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
 
             headerLabel.topAnchor.constraint(equalTo: greetingLabel.bottomAnchor, constant: 4),
             headerLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
 
-            activeContainerView.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 20),
-            activeContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            activeContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            activeContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            scrollView.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 20),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
 
-            endedContainerView.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 20),
-            endedContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            endedContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            endedContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            contentStackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentStackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
+            contentStackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -20),
+            contentStackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -24),
+            contentStackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -40),
 
             activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
+
+        setupActiveViews()
+        setupEndedViews()
+        setupStepper()
+
+        contentStackView.addArrangedSubview(activeViews)
+        contentStackView.addArrangedSubview(endedViews)
+        contentStackView.addArrangedSubview(stepperContainer)
+
+        activeViews.isHidden = true
+        endedViews.isHidden = true
     }
 
-    private func setupActiveState() {
-        activeContainerView.addSubview(activeCard)
+    private func setupActiveViews() {
+        activeViews.translatesAutoresizingMaskIntoConstraints = false
+
         activeCard.addSubview(cardSubtitleLabel)
         activeCard.addSubview(timerView)
-        activeContainerView.addSubview(breakEndsLabel)
-        activeContainerView.addSubview(endEarlyButton)
+        activeViews.addSubview(activeCard)
+        activeViews.addSubview(breakEndsLabel)
+        activeViews.addSubview(endEarlyButton)
 
         endEarlyButton.addTarget(self, action: #selector(endEarlyTapped), for: .touchUpInside)
 
         NSLayoutConstraint.activate([
-            activeCard.topAnchor.constraint(equalTo: activeContainerView.topAnchor),
-            activeCard.leadingAnchor.constraint(equalTo: activeContainerView.leadingAnchor, constant: 20),
-            activeCard.trailingAnchor.constraint(equalTo: activeContainerView.trailingAnchor, constant: -20),
+            activeCard.topAnchor.constraint(equalTo: activeViews.topAnchor),
+            activeCard.leadingAnchor.constraint(equalTo: activeViews.leadingAnchor),
+            activeCard.trailingAnchor.constraint(equalTo: activeViews.trailingAnchor),
 
             cardSubtitleLabel.topAnchor.constraint(equalTo: activeCard.topAnchor, constant: 24),
             cardSubtitleLabel.leadingAnchor.constraint(equalTo: activeCard.leadingAnchor, constant: 20),
             cardSubtitleLabel.trailingAnchor.constraint(equalTo: activeCard.trailingAnchor, constant: -20),
 
-            timerView.topAnchor.constraint(equalTo: cardSubtitleLabel.bottomAnchor, constant: 16),
+            timerView.topAnchor.constraint(equalTo: cardSubtitleLabel.bottomAnchor, constant: 12),
             timerView.centerXAnchor.constraint(equalTo: activeCard.centerXAnchor),
             timerView.widthAnchor.constraint(equalToConstant: 220),
             timerView.heightAnchor.constraint(equalToConstant: 220),
-            timerView.bottomAnchor.constraint(equalTo: activeCard.bottomAnchor, constant: -24),
+            timerView.bottomAnchor.constraint(equalTo: activeCard.bottomAnchor, constant: -20),
 
-            breakEndsLabel.topAnchor.constraint(equalTo: activeCard.bottomAnchor, constant: 20),
-            breakEndsLabel.centerXAnchor.constraint(equalTo: activeContainerView.centerXAnchor),
+            breakEndsLabel.topAnchor.constraint(equalTo: activeCard.bottomAnchor, constant: 16),
+            breakEndsLabel.centerXAnchor.constraint(equalTo: activeViews.centerXAnchor),
 
-            endEarlyButton.leadingAnchor.constraint(equalTo: activeContainerView.leadingAnchor, constant: 24),
-            endEarlyButton.trailingAnchor.constraint(equalTo: activeContainerView.trailingAnchor, constant: -24),
-            endEarlyButton.bottomAnchor.constraint(equalTo: activeContainerView.safeAreaLayoutGuide.bottomAnchor, constant: -24),
+            endEarlyButton.topAnchor.constraint(equalTo: breakEndsLabel.bottomAnchor, constant: 16),
+            endEarlyButton.leadingAnchor.constraint(equalTo: activeViews.leadingAnchor),
+            endEarlyButton.trailingAnchor.constraint(equalTo: activeViews.trailingAnchor),
             endEarlyButton.heightAnchor.constraint(equalToConstant: 52),
+            endEarlyButton.bottomAnchor.constraint(equalTo: activeViews.bottomAnchor),
         ])
     }
 
-    private func setupEndedState() {
-        endedContainerView.addSubview(endedCard)
-        endedCard.addSubview(checkmarkView)
-        endedCard.addSubview(endedMessageLabel)
+    private func setupEndedViews() {
+        endedViews.translatesAutoresizingMaskIntoConstraints = false
+        endedViews.addSubview(endedCardImageView)
 
         NSLayoutConstraint.activate([
-            endedCard.topAnchor.constraint(equalTo: endedContainerView.topAnchor),
-            endedCard.leadingAnchor.constraint(equalTo: endedContainerView.leadingAnchor, constant: 20),
-            endedCard.trailingAnchor.constraint(equalTo: endedContainerView.trailingAnchor, constant: -20),
-
-            checkmarkView.topAnchor.constraint(equalTo: endedCard.topAnchor, constant: 48),
-            checkmarkView.centerXAnchor.constraint(equalTo: endedCard.centerXAnchor),
-            checkmarkView.widthAnchor.constraint(equalToConstant: 90),
-            checkmarkView.heightAnchor.constraint(equalToConstant: 90),
-
-            endedMessageLabel.topAnchor.constraint(equalTo: checkmarkView.bottomAnchor, constant: 20),
-            endedMessageLabel.leadingAnchor.constraint(equalTo: endedCard.leadingAnchor, constant: 20),
-            endedMessageLabel.trailingAnchor.constraint(equalTo: endedCard.trailingAnchor, constant: -20),
-            endedMessageLabel.bottomAnchor.constraint(equalTo: endedCard.bottomAnchor, constant: -48),
+            endedCardImageView.topAnchor.constraint(equalTo: endedViews.topAnchor),
+            endedCardImageView.leadingAnchor.constraint(equalTo: endedViews.leadingAnchor),
+            endedCardImageView.trailingAnchor.constraint(equalTo: endedViews.trailingAnchor),
+            endedCardImageView.bottomAnchor.constraint(equalTo: endedViews.bottomAnchor),
         ])
+    }
+
+    private func setupStepper() {
+        stepperContainer.addSubview(stepperView)
+
+        NSLayoutConstraint.activate([
+            stepperView.topAnchor.constraint(equalTo: stepperContainer.topAnchor, constant: 20),
+            stepperView.leadingAnchor.constraint(equalTo: stepperContainer.leadingAnchor, constant: 20),
+            stepperView.trailingAnchor.constraint(equalTo: stepperContainer.trailingAnchor, constant: -20),
+            stepperView.bottomAnchor.constraint(equalTo: stepperContainer.bottomAnchor, constant: -20),
+        ])
+
+        stepperView.onLogoutTapped = { [weak self] in
+            self?.handleLogout()
+        }
     }
 
     // MARK: - Binding
@@ -248,27 +298,33 @@ final class BreakViewController: UIViewController {
         switch viewModel.state {
         case .loading:
             activityIndicator.startAnimating()
-            activeContainerView.isHidden = true
-            endedContainerView.isHidden = true
+            activeViews.isHidden = true
+            endedViews.isHidden = true
+            stepperContainer.isHidden = true
 
         case .active:
             activityIndicator.stopAnimating()
-            activeContainerView.isHidden = false
-            endedContainerView.isHidden = true
+            activeViews.isHidden = false
+            endedViews.isHidden = true
+            stepperContainer.isHidden = false
             timerView.setTime(viewModel.formattedTime)
             timerView.setProgress(viewModel.progress)
             breakEndsLabel.text = viewModel.formattedEndTime
+            updateStepper(breakEnded: false)
 
         case .ended:
             activityIndicator.stopAnimating()
-            activeContainerView.isHidden = true
-            endedContainerView.isHidden = false
+            activeViews.isHidden = true
+            endedViews.isHidden = false
+            stepperContainer.isHidden = false
+            updateStepper(breakEnded: true)
 
         case .noBreak:
             activityIndicator.stopAnimating()
-            activeContainerView.isHidden = true
-            endedContainerView.isHidden = false
-            endedMessageLabel.text = "There is no break scheduled\nfor you right now."
+            activeViews.isHidden = true
+            endedViews.isHidden = false
+            stepperContainer.isHidden = false
+            updateStepper(breakEnded: true)
 
         case .error(let message):
             activityIndicator.stopAnimating()
@@ -278,6 +334,15 @@ final class BreakViewController: UIViewController {
             })
             present(alert, animated: true)
         }
+    }
+
+    private func updateStepper(breakEnded: Bool) {
+        let steps: [ProgressStepperView.Step] = [
+            .init(title: "Login", state: .completed),
+            .init(title: "Lunch in Progress", state: breakEnded ? .completed : .inProgress),
+            .init(title: "Logout", state: .pending),
+        ]
+        stepperView.configure(steps: steps)
     }
 
     // MARK: - Actions
@@ -291,6 +356,19 @@ final class BreakViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "Continue", style: .cancel))
         alert.addAction(UIAlertAction(title: "End now", style: .destructive) { [weak self] _ in
             self?.viewModel.endBreakEarly()
+        })
+        present(alert, animated: true)
+    }
+
+    private func handleLogout() {
+        let alert = UIAlertController(
+            title: "Logout",
+            message: "Are you sure you want to logout?",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        alert.addAction(UIAlertAction(title: "Logout", style: .destructive) { [weak self] _ in
+            self?.viewModel.onLogout?()
         })
         present(alert, animated: true)
     }

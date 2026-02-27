@@ -1,3 +1,10 @@
+//
+//  BreakViewModel.swift
+//  BreakApp
+//
+//  Created by Nishant Gulani on 26/02/26.
+//
+
 import Foundation
 
 final class BreakViewModel {
@@ -34,6 +41,7 @@ final class BreakViewModel {
 
     var onStateChanged: (() -> Void)?
     var onBreakEnded: (() -> Void)?
+    var onLogout: (() -> Void)?
 
     init(dataRepository: DataRepositoryProtocol, userId: String) {
         self.dataRepository = dataRepository
