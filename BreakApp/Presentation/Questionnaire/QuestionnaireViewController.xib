@@ -10,6 +10,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="QuestionnaireViewController" customModule="BreakApp" customModuleProvider="target">
             <connections>
+                <outlet property="backButtonView" destination="MhI-eT-cBV" id="bck-btn-outlet"/>
                 <outlet property="collectionView" destination="Ypt-05-xgy" id="ixp-N4-eOr"/>
                 <outlet property="continueButton" destination="Nt9-HA-aF1" id="4pG-24-JoS"/>
                 <outlet property="continueButtonBackView" destination="gYv-vJ-1cU" id="3rD-V2-dVL"/>

@@ -20,6 +20,7 @@ final class LoginViewController: UIViewController {
     // MARK: - Properties
 
     var viewModel: LoginViewModel
+    private var isLoading = false
     
     // MARK: - Init
 
@@ -48,6 +49,28 @@ final class LoginViewController: UIViewController {
         passwordTextField.isSecureTextEntry = true
         loginButton.layer.cornerRadius = 8
         loginButtonBackView.layer.cornerRadius = 8
+
+        emailTextField.addTarget(self, action: #selector(updateLoginButtonState), for: .editingChanged)
+        passwordTextField.addTarget(self, action: #selector(updateLoginButtonState), for: .editingChanged)
+        updateLoginButtonState()
+    }
+
+    private var isValidInput: Bool {
+        let email = (emailTextField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        let password = (passwordTextField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        return !email.isEmpty && !password.isEmpty
+    }
+
+    @objc private func updateLoginButtonState() {
+        let enabled = isValidInput && !isLoading
+        loginButton.isEnabled = enabled
+        if enabled {
+            loginButtonBackView.backgroundColor = .purple
+            loginButton.setTitleColor(.white, for: .normal)
+        } else {
+            loginButtonBackView.backgroundColor = .systemGray4
+            loginButton.setTitleColor(.systemGray, for: .disabled)
+        }
     }
 
     private func setupBindings() {
@@ -58,7 +81,8 @@ final class LoginViewController: UIViewController {
         }
 
         viewModel.onLoadingStateChange = { [weak self] isLoading in
-            self?.loginButton.isEnabled = !isLoading
+            self?.isLoading = isLoading
+            self?.updateLoginButtonState()
         }
     }
     

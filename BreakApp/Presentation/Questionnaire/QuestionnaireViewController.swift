@@ -9,6 +9,7 @@ import UIKit
 
 final class QuestionnaireViewController: UIViewController {
     
+    @IBOutlet weak var backButtonView: UIView!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var continueButton: UIButton!
@@ -32,10 +33,21 @@ final class QuestionnaireViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupBackButton()
         setupCollection()
         setupQuestions()
         bindViewModel()
         updateContinueState()
+    }
+
+    private func setupBackButton() {
+        backButtonView.isUserInteractionEnabled = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(backTapped))
+        backButtonView.addGestureRecognizer(tap)
+    }
+
+    @objc private func backTapped() {
+        viewModel.onBack?()
     }
 
     private func setupCollection() {

@@ -10,6 +10,14 @@ import FirebaseAuth
 
 final class AppCoordinator {
 
+    private enum LastScreen: String {
+        case login
+        case questionnaire
+        case breakScreen = "break"
+    }
+
+    private static let lastScreenKey = "BreakApp.lastScreen"
+
     // MARK: - Properties
 
     private let window: UIWindow
@@ -43,6 +51,7 @@ final class AppCoordinator {
 
     private func determineInitialFlow() {
         guard let userId = authRepository.currentUserId() else {
+            saveLastScreen(.login)
             showLogin()
             return
         }
@@ -51,20 +60,47 @@ final class AppCoordinator {
 
         Task {
             do {
+                let lastScreen = Self.loadLastScreen()
                 let hasSubmitted = try await dataRepository.hasSubmittedQuestionnaire(userId: userId)
                 await MainActor.run {
-                    if hasSubmitted {
-                        showBreakScreen()
-                    } else {
+                    switch lastScreen {
+                    case .login:
+                        showLogin()
+                    case .questionnaire:
                         showQuestionnaire()
+                    case .breakScreen:
+                        showBreakScreen()
+                    case .none:
+                        if hasSubmitted {
+                            showBreakScreen()
+                        } else {
+                            showQuestionnaire()
+                        }
                     }
                 }
             } catch {
                 await MainActor.run {
-                    showQuestionnaire()
+                    let lastScreen = Self.loadLastScreen()
+                    switch lastScreen {
+                    case .login:
+                        showLogin()
+                    case .breakScreen:
+                        showBreakScreen()
+                    default:
+                        showQuestionnaire()
+                    }
                 }
             }
         }
+    }
+
+    private static func loadLastScreen() -> LastScreen? {
+        guard let raw = UserDefaults.standard.string(forKey: lastScreenKey) else { return nil }
+        return LastScreen(rawValue: raw)
+    }
+
+    private func saveLastScreen(_ screen: LastScreen) {
+        UserDefaults.standard.set(screen.rawValue, forKey: Self.lastScreenKey)
     }
 
     // MARK: - Navigation
@@ -89,6 +125,7 @@ final class AppCoordinator {
             self?.showQuestionnaire()
         }
 
+        saveLastScreen(.login)
         navigationController.setViewControllers([viewController], animated: false)
     }
 
@@ -113,6 +150,7 @@ final class AppCoordinator {
             self?.showBreakScreen()
         }
 
+        saveLastScreen(.questionnaire)
         navigationController.setViewControllers([viewController], animated: true)
     }
 
@@ -134,6 +172,7 @@ final class AppCoordinator {
 
         let viewController = BreakViewController(viewModel: viewModel)
 
+        saveLastScreen(.breakScreen)
         navigationController.setViewControllers([viewController], animated: true)
     }
 }
