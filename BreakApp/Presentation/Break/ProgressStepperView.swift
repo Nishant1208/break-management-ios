@@ -18,8 +18,6 @@ final class ProgressStepperView: UIView {
         let state: StepState
     }
 
-    var onLogoutTapped: (() -> Void)?
-
     private let stackView: UIStackView = {
         let sv = UIStackView()
         sv.axis = .vertical
@@ -51,17 +49,7 @@ final class ProgressStepperView: UIView {
             let isLast = index == steps.count - 1
             let row = makeStepRow(step: step, showLine: !isLast)
             stackView.addArrangedSubview(row)
-
-            if step.title == "Logout" {
-                let tap = UITapGestureRecognizer(target: self, action: #selector(logoutTapped))
-                row.addGestureRecognizer(tap)
-                row.isUserInteractionEnabled = true
-            }
         }
-    }
-
-    @objc private func logoutTapped() {
-        onLogoutTapped?()
     }
 
     private func makeStepRow(step: Step, showLine: Bool) -> UIView {

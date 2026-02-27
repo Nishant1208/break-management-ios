@@ -40,6 +40,15 @@ final class BreakViewController: UIViewController {
         return label
     }()
 
+    private let logoutButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Logout", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+
     // MARK: - Scroll view for content
 
     private let scrollView: UIScrollView = {
@@ -178,8 +187,11 @@ final class BreakViewController: UIViewController {
         view.addSubview(backgroundImageView)
         view.addSubview(greetingLabel)
         view.addSubview(headerLabel)
+        view.addSubview(logoutButton)
         view.addSubview(scrollView)
         view.addSubview(activityIndicator)
+
+        logoutButton.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
 
         scrollView.addSubview(contentStackView)
 
@@ -194,6 +206,9 @@ final class BreakViewController: UIViewController {
 
             headerLabel.topAnchor.constraint(equalTo: greetingLabel.bottomAnchor, constant: 4),
             headerLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+
+            logoutButton.centerYAnchor.constraint(equalTo: headerLabel.centerYAnchor),
+            logoutButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24),
 
             scrollView.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 20),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -281,9 +296,6 @@ final class BreakViewController: UIViewController {
             stepperView.bottomAnchor.constraint(equalTo: stepperContainer.bottomAnchor, constant: -20),
         ])
 
-        stepperView.onLogoutTapped = { [weak self] in
-            self?.handleLogout()
-        }
     }
 
     // MARK: - Binding
@@ -340,12 +352,15 @@ final class BreakViewController: UIViewController {
         let steps: [ProgressStepperView.Step] = [
             .init(title: "Login", state: .completed),
             .init(title: "Lunch in Progress", state: breakEnded ? .completed : .inProgress),
-            .init(title: "Logout", state: .pending),
         ]
         stepperView.configure(steps: steps)
     }
 
     // MARK: - Actions
+
+    @objc private func logoutButtonTapped() {
+        handleLogout()
+    }
 
     @objc private func endEarlyTapped() {
         let alert = UIAlertController(
