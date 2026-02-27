@@ -162,7 +162,6 @@
 				5AA083422F504D8F00C77523 /* Presentation */,
 				5AA083412F504D8A00C77523 /* Data */,
 				5AA083402F504D8400C77523 /* Domain */,
-				5AA0833F2F504D7E00C77523 /* Core */,
 				5AA0832C2F504D6200C77523 /* App */,
 				5AA0832D2F504D6200C77523 /* Assets.xcassets */,
 				5AA0832E2F504D6200C77523 /* GoogleService-Info.plist */,
@@ -172,13 +171,6 @@
 				5AA083342F504D6200C77523 /* ViewController.swift */,
 			);
 			path = BreakApp;
-			sourceTree = "<group>";
-		};
-		5AA0833F2F504D7E00C77523 /* Core */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Core;
 			sourceTree = "<group>";
 		};
 		5AA083402F504D8400C77523 /* Domain */ = {
